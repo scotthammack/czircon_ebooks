@@ -5,6 +5,7 @@ import json
 import random
 import re
 import string
+import sys
 import tweepy
 
 from twitter_secrets import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET, DATABASE
@@ -70,7 +71,7 @@ def create_post(corpus):
 
 		wordnum += 1
 
-		if (corpus[position].endswith(('.','?','!','.\"','!\"','?\"')) and corpus[position + 1].istitle() and not corpus[position].endswith(('Mr.','Mrs.', 'Dr.','Ms.'))):
+		if (corpus[position].endswith(('.','?','!','.\"','!\"','?\"')) and corpus[position + 1].istitle() and not corpus[position].endswith(('Mr.','Mrs.', 'Dr.','Ms.'))) and random.random() < 0.5:
 			return tweet
 
 		if random.random() <= JUMP_PROB:
@@ -90,4 +91,8 @@ corpus = assemble_corpus(DATABASE)
 
 output = create_post(corpus)
 print output
-api.update_status(output)
+if len(sys.argv) > 1 and sys.argv[1] == "debug":
+	if raw_input("Post tweet? ").lower() == 'y':
+		api.update_status(output)
+else:
+	api.update_status(output)
