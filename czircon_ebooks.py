@@ -56,12 +56,19 @@ def strip_punct(word):
 
 def create_post(corpus):
 	tweet = ''
+	wordnum = 0
 
 	position = get_start_pos()
 
 	while len(tweet) < OUTPUT_LENGTH - len(corpus[position]):
 
-		tweet += corpus[position]
+		if wordnum == 0:
+			new_word = corpus[position].capitalize()
+		else:
+			new_word = corpus[position]
+		tweet += new_word
+
+		wordnum += 1
 
 		if (corpus[position].endswith(('.','?','!','.\"','!\"','?\"')) and corpus[position + 1].istitle() and not corpus[position].endswith(('Mr.','Mrs.', 'Dr.','Ms.'))):
 			return tweet
